@@ -1,4 +1,4 @@
-#  Fruit Processing Digital Consultant
+# Fruit Processing Digital Consultant
 
  ## Purpose:
 This project helps entrepreneurs plan fruit processing units by collecting business inputs, analyzing feasibility, and generating a Digital Project Report (DPR) using AI.
