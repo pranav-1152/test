@@ -19,6 +19,7 @@ import findUserRoutes from './routes/project.routes.js'
 import findUserIdRoutes from './routes/project.routes.js'
 import getTotalRequestsCountRoute from './routes/project.routes.js'
 import dashboardRoutes from './routes/project.routes.js'
+import requestRoutes from './routes/project.routes.js'
 
 app.use(projectRoutes);
 app.use(checkUserRoute);
@@ -26,5 +27,6 @@ app.use(findUserRoutes);
 app.use(findUserIdRoutes);
 app.use(getTotalRequestsCountRoute)
 app.use(dashboardRoutes);
+app.use(requestRoutes);
 
 export { app }

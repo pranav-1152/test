@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>All Requests</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+    }
+
+    /* Top Bar */
+    .topbar {
+      background: #ffffff;
+      height: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 30px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    /* Layout */
+    .container {
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background: #ffffff;
+      min-height: calc(100vh - 60px);
+      border-right: 1px solid #ddd;
+      padding-top: 20px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 30px;
+      color: #555;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sidebar a:hover {
+      background: #f0f0f0;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      padding: 30px;
+    }
+
+    /* Card */
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f8f8f8;
+    }
+
+    /* Status Badges */
+    .status {
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .pending {
+      background: #fff1d6;
+      color: #a36a00;
+    }
+
+    .approved {
+      background: #e6fff3;
+      color: #007a4d;
+    }
+
+    .generated {
+      background: #e8f0ff;
+      color: #1e40af;
+    }
+
+    .rejected {
+      background: #ffecec;
+      color: #b00020;
+    }
+
+    /* Action Button */
+    button {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      background: #1e90ff;
+      color: white;
+    }
+
+    button:hover {
+      background: #1c7ed6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <strong>Admin Logo</strong>
+    <span>🔔 Admin</span>
+  </div>
+
+  <div class="container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="../views/dashboard">Dashboard</a>
+      <a href="requests.ejs"><strong>Requests</strong></a>
+      <a href="#">Pending DPR</a>
+      <a href="#">Generated DPR</a>
+      <a href="#">Rejected</a>
+      <a href="#">Reports</a>
+      <a href="#">Settings</a>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+
+      <div class="card">
+        <h2>All Requests</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Company Name</th>
+              <th>Project</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% requests.forEach((req, index)=> { %>
+              <tr>
+                <td>
+                  <%= index + 1 %>
+                </td>
+                <td>
+                  <%= req.companyName %>
+                </td>
+                <td>
+                  <%= req.productManufactured %>
+                </td>
+                <td>
+                  <span class="status <%= req.status %>">
+                    <%= (req.status || "pending").toUpperCase() %>
+                  </span>
+                </td>
+                <td>
+                  <button onclick="viewRequest('<%= req._id %>')">View</button>
+                </td>
+              </tr>
+              <% }) %>
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- VIEW REQUEST MODAL -->
+  <div id="requestModal" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.5);
+    justify-content:center;
+    align-items:center;
+  ">
+
+    <div style="
+      background:#fff;
+      width:70%;
+      max-height:80%;
+      overflow:auto;
+      border-radius:12px;
+      padding:20px;
+    ">
+      <h2 id="modalTitle"></h2>
+
+      <div id="modalBody"></div>
+
+      <div style="margin-top:20px;display:flex;justify-content:flex-end;gap:10px;">
+        <button id="approveBtn" onclick="approveRequest()">Approve</button>
+        <button id="rejectBtn" onclick="rejectRequest()" style="background:#ef4444;">Reject</button>
+        <button id="generateBtn" onclick="generateDPR()" style="background:#10b981;display:none;">
+          Generate DPR
+        </button>
+        <button onclick="closeModal()">Close</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- <script>
+    let selectedRequest = null;
+    /* ======================
+      RENDER TABLE
+    ====================== */
+
+    const table = document.getElementById("requestTable");
+
+    function renderTable() {
+      table.innerHTML = "";
+
+      requests.forEach((req, index) => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${req.company}</td>
+      <td>${req.project}</td>
+      <td>
+        <span class="status ${req.status}">
+          ${req.status.toUpperCase()}
+        </span>
+      </td>
+      <td>
+        <button onclick="viewRequest('${req.company}')">View</button>
+      </td>
+    `;
+
+        table.appendChild(tr);
+      });
+    }
+
+    // Initial load
+    renderTable();
+
+
+    /* ======================
+      ACTION
+    ====================== */
+
+    function viewRequest(company) {
+
+      selectedRequest = requests.find(r => r.company === company);
+      if (!selectedRequest) return;
+
+      document.getElementById("modalTitle").innerText = company;
+
+      const modalBody = document.getElementById("modalBody");
+      modalBody.innerHTML = "";
+
+      Object.keys(selectedRequest).forEach(key => {
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.borderBottom = "1px solid #eee";
+        row.style.padding = "8px 0";
+
+        row.innerHTML = `
+      <div style="width:40%;font-weight:bold;">
+        ${key.replace(/([A-Z])/g, ' $1')}
+      </div>
+      <div style="width:60%;">
+        ${selectedRequest[key]}
+      </div>
+    `;
+
+        modalBody.appendChild(row);
+      });
+
+      // BUTTON VISIBILITY LOGIC
+      document.getElementById("approveBtn").style.display =
+        selectedRequest.status === "pending" ? "inline-block" : "none";
+
+      document.getElementById("rejectBtn").style.display =
+        selectedRequest.status === "pending" ? "inline-block" : "none";
+
+      document.getElementById("generateBtn").style.display =
+        selectedRequest.status === "approved" ? "inline-block" : "none";
+
+      document.getElementById("requestModal").style.display = "flex";
+    }
+
+    function approveRequest() {
+      selectedRequest.status = "approved";
+      closeModal();
+      renderTable();
+    }
+
+    function rejectRequest() {
+      selectedRequest.status = "rejected";
+      closeModal();
+      renderTable();
+    }
+
+    function generateDPR() {
+      selectedRequest.status = "generated";
+      alert("DPR Generated for " + selectedRequest.company);
+      closeModal();
+      renderTable();
+    }
+
+
+
+    function closeModal() {
+      document.getElementById("requestModal").style.display = "none";
+    }
+
+  </script> -->
+
+  <script >
+  const requests = <%- JSON.stringify(requests) %>;
+  let selectedRequest = null;
+
+  function viewRequest(id) {
+    selectedRequest = requests.find(r => r._id === id);
+
+    document.getElementById("modalTitle").innerText =
+      selectedRequest.companyName;
+
+    const modalBody = document.getElementById("modalBody");
+    modalBody.innerHTML = "";
+
+    Object.entries(selectedRequest).forEach(([key, value]) => {
+      if (key === "_id" || key === "__v") return;
+
+      const row = document.createElement("div");
+      row.style.display = "flex";
+      row.style.borderBottom = "1px solid #eee";
+      row.style.padding = "6px 0";
+
+      row.innerHTML = `
+        <div style="width:40%;font-weight:bold;">
+          ${key.replace(/([A-Z])/g, ' $1')}
+        </div>
+        <div style="width:60%;">
+          ${value ?? "-"}
+        </div>
+      `;
+
+      modalBody.appendChild(row);
+    });
+
+    toggleButtons();
+    document.getElementById("requestModal").style.display = "flex";
+  }
+
+  function toggleButtons() {
+    document.getElementById("approveBtn").style.display =
+      selectedRequest.status === "pending" ? "inline-block" : "none";
+
+    document.getElementById("rejectBtn").style.display =
+      selectedRequest.status === "pending" ? "inline-block" : "none";
+
+    document.getElementById("generateBtn").style.display =
+      selectedRequest.status === "approved" ? "inline-block" : "none";
+  }
+
+  function closeModal() {
+    document.getElementById("requestModal").style.display = "none";
+  }
+</script>
+
+</body>
+
+</html>
