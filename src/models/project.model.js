@@ -29,7 +29,7 @@ const ProjectSchema = new mongoose.Schema(
     },
 
     marketSurveyDone: {
-      type: Boolean,
+      type: String,
       required: true,
     },
 
@@ -54,7 +54,7 @@ const ProjectSchema = new mongoose.Schema(
     },
     // ===== OPTIONAL FIELDS =====
     logisticsCost: {
-      type: Number
+      type: String
     },
     maturityOfFruitOrVegetable: {
       type: String
@@ -63,13 +63,13 @@ const ProjectSchema = new mongoose.Schema(
       type: String
     },
     costOfRawMaterial: {
-      type: Number
+      type: String
     },
     wastageInTransport: {
-      type: Number
+      type: String
     },
     yieldPercentage: {
-      type: Number
+      type: String
     },
     acceptableBlemishes: {
       type: String
@@ -84,28 +84,28 @@ const ProjectSchema = new mongoose.Schema(
       type: String
     },
     energyCost: {
-      type: Number
+      type: String
     },
     processWaterCost: {
-      type: Number
+      type: String
     },
     factoryBuildingType: {
       type: String, // own or rented
     },
     costOfConstruction: {
-      type: Number
+      type: String
     },
     landPreparation: {
       type: String
     },
     manpowerRequirement: {
-      type: Number
+      type: String
     },
     manpowerCost: {
-      type: Number
+      type: String
     },
     expectedYieldPercentage: {
-      type: Number
+      type: String
     },
     expectedYieldWithQuality: {
       type: String
@@ -117,23 +117,23 @@ const ProjectSchema = new mongoose.Schema(
       type: String
     },
     cleaningChemicalsCost: {
-      type: Number
+      type: String
     },
     packagingMachineryCost: {
-      type: Number
+      type: String
     },
     packagingCostPerUnit: {
-      type: Number
+      type: String
     },
     electrificationCost: {
-      type: Number
+      type: String
     },
     otherChemicalsAdditivesCost: {
-      type: Number
+      type: String
     },
     otherPeripherals: { type: String },
     depreciation: {
-      type: Number
+      type: String
     },
     profitAndLossStatement: {
       type: String

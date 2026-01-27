@@ -152,7 +152,25 @@
 
       <div class="card">
         <h2>All Requests</h2>
+<form method="GET" action="/admin/requests"
+      style="display:flex;gap:10px;align-items:center;margin-bottom:15px;">
 
+  <input type="text"
+         name="search"
+         placeholder="Search company / product"
+         value="<%= search || '' %>"
+         style="padding:6px 10px;width:220px;">
+
+  <select name="status" style="padding:6px 10px;">
+    <option value="">All Status</option>
+    <option value="pending" <%= status==='pending'?'selected':'' %>>Pending</option>
+    <option value="approved" <%= status==='approved'?'selected':'' %>>Approved</option>
+    <option value="rejected" <%= status==='rejected'?'selected':'' %>>Rejected</option>
+    <option value="generated" <%= status==='generated'?'selected':'' %>>Generated</option>
+  </select>
+
+  <button type="submit">Apply</button>
+</form>
         <table>
           <thead>
             <tr>
@@ -177,17 +195,41 @@
                 </td>
                 <td>
                   <span class="status <%= req.status %>">
-                    <%= (req.status || "pending").toUpperCase() %>
+                    <%= (req.status || "pending" ).toUpperCase() %>
                   </span>
                 </td>
                 <td>
-                  <button onclick="viewRequest('<%= req._id %>')">View</button>
+                  <button class="view-btn" data-id="<%= req._id %>">View</button>
                 </td>
               </tr>
               <% }) %>
           </tbody>
 
         </table>
+
+        <div style="margin-top:20px;display:flex;justify-content:center;gap:6px;">
+
+  <% if (currentPage > 1) { %>
+    <a href="?page=<%= currentPage - 1 %>&search=<%= search %>&status=<%= status %>">
+      <button>Prev</button>
+    </a>
+  <% } %>
+
+  <% for (let i = 1; i <= totalPages; i++) { %>
+    <a href="?page=<%= i %>&search=<%= search %>&status=<%= status %>">
+      <button style="<%= i === currentPage ? 'background:#000;' : '' %>">
+        <%= i %>
+      </button>
+    </a>
+  <% } %>
+
+  <% if (currentPage < totalPages) { %>
+    <a href="?page=<%= currentPage + 1 %>&search=<%= search %>&status=<%= status %>">
+      <button>Next</button>
+    </a>
+  <% } %>
+
+</div>
       </div>
 
     </div>
@@ -220,8 +262,8 @@
       <div style="margin-top:20px;display:flex;justify-content:flex-end;gap:10px;">
         <button id="approveBtn" onclick="approveRequest()">Approve</button>
         <button id="rejectBtn" onclick="rejectRequest()" style="background:#ef4444;">Reject</button>
-        <button id="generateBtn" onclick="generateDPR()" style="background:#10b981;display:none;">
-          Generate DPR
+        <button id="deleteBtn" onclick="deleteRequest()" style="background:#000;">Delete</button>
+        <button id="generateBtn" onclick="generateDPR()" style="background:#10b981;display:none;"> Generate DPR
         </button>
         <button onclick="closeModal()">Close</button>
       </div>
@@ -229,167 +271,142 @@
     </div>
   </div>
 
-
-  <!-- <script>
+  
+  <script>
+    // ===== DATA =====
+    const requests = <%- JSON.stringify(requests) %>;
     let selectedRequest = null;
-    /* ======================
-      RENDER TABLE
-    ====================== */
 
-    const table = document.getElementById("requestTable");
+    // ===== DOM CACHE =====
+    const modal = document.getElementById("requestModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalBody = document.getElementById("modalBody");
 
-    function renderTable() {
-      table.innerHTML = "";
+    const approveBtn = document.getElementById("approveBtn");
+    const rejectBtn = document.getElementById("rejectBtn");
+    const deleteBtn = document.getElementById("deleteBtn");
+    const generateBtn = document.getElementById("generateBtn");
 
-      requests.forEach((req, index) => {
-        const tr = document.createElement("tr");
+    // ===== EVENT DELEGATION FOR VIEW BUTTON =====
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".view-btn");
+      if (!btn) return;
 
-        tr.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${req.company}</td>
-      <td>${req.project}</td>
-      <td>
-        <span class="status ${req.status}">
-          ${req.status.toUpperCase()}
-        </span>
-      </td>
-      <td>
-        <button onclick="viewRequest('${req.company}')">View</button>
-      </td>
-    `;
+      const id = btn.dataset.id;
+      openRequestModal(id);
+    });
 
-        table.appendChild(tr);
-      });
-    }
+    // ===== OPEN MODAL =====
+    function openRequestModal(id) {
+      selectedRequest = requests.find(r => String(r._id) === String(id));
 
-    // Initial load
-    renderTable();
+      if (!selectedRequest) {
+        alert("Request not found");
+        return;
+      }
 
-
-    /* ======================
-      ACTION
-    ====================== */
-
-    function viewRequest(company) {
-
-      selectedRequest = requests.find(r => r.company === company);
-      if (!selectedRequest) return;
-
-      document.getElementById("modalTitle").innerText = company;
-
-      const modalBody = document.getElementById("modalBody");
+      modalTitle.textContent = selectedRequest.companyName || "";
       modalBody.innerHTML = "";
 
-      Object.keys(selectedRequest).forEach(key => {
+      Object.entries(selectedRequest).forEach(([key, value]) => {
+        if (key === "_id" || key === "__v") return;
+
         const row = document.createElement("div");
         row.style.display = "flex";
         row.style.borderBottom = "1px solid #eee";
-        row.style.padding = "8px 0";
+        row.style.padding = "6px 0";
 
         row.innerHTML = `
-      <div style="width:40%;font-weight:bold;">
-        ${key.replace(/([A-Z])/g, ' $1')}
-      </div>
-      <div style="width:60%;">
-        ${selectedRequest[key]}
-      </div>
-    `;
-
-        modalBody.appendChild(row);
-      });
-
-      // BUTTON VISIBILITY LOGIC
-      document.getElementById("approveBtn").style.display =
-        selectedRequest.status === "pending" ? "inline-block" : "none";
-
-      document.getElementById("rejectBtn").style.display =
-        selectedRequest.status === "pending" ? "inline-block" : "none";
-
-      document.getElementById("generateBtn").style.display =
-        selectedRequest.status === "approved" ? "inline-block" : "none";
-
-      document.getElementById("requestModal").style.display = "flex";
-    }
-
-    function approveRequest() {
-      selectedRequest.status = "approved";
-      closeModal();
-      renderTable();
-    }
-
-    function rejectRequest() {
-      selectedRequest.status = "rejected";
-      closeModal();
-      renderTable();
-    }
-
-    function generateDPR() {
-      selectedRequest.status = "generated";
-      alert("DPR Generated for " + selectedRequest.company);
-      closeModal();
-      renderTable();
-    }
-
-
-
-    function closeModal() {
-      document.getElementById("requestModal").style.display = "none";
-    }
-
-  </script> -->
-
-  <script >
-  const requests = <%- JSON.stringify(requests) %>;
-  let selectedRequest = null;
-
-  function viewRequest(id) {
-    selectedRequest = requests.find(r => r._id === id);
-
-    document.getElementById("modalTitle").innerText =
-      selectedRequest.companyName;
-
-    const modalBody = document.getElementById("modalBody");
-    modalBody.innerHTML = "";
-
-    Object.entries(selectedRequest).forEach(([key, value]) => {
-      if (key === "_id" || key === "__v") return;
-
-      const row = document.createElement("div");
-      row.style.display = "flex";
-      row.style.borderBottom = "1px solid #eee";
-      row.style.padding = "6px 0";
-
-      row.innerHTML = `
         <div style="width:40%;font-weight:bold;">
-          ${key.replace(/([A-Z])/g, ' $1')}
+          ${key.replace(/([A-Z])/g, " $1")}
         </div>
         <div style="width:60%;">
           ${value ?? "-"}
         </div>
       `;
 
-      modalBody.appendChild(row);
-    });
+        modalBody.appendChild(row);
+      });
 
-    toggleButtons();
-    document.getElementById("requestModal").style.display = "flex";
-  }
+      toggleButtons();
+      modal.style.display = "flex";
+    }
 
-  function toggleButtons() {
-    document.getElementById("approveBtn").style.display =
-      selectedRequest.status === "pending" ? "inline-block" : "none";
+    // ===== BUTTON VISIBILITY =====
+    function toggleButtons() {
+      approveBtn.style.display =
+        selectedRequest.status === "pending" ? "inline-block" : "none";
 
-    document.getElementById("rejectBtn").style.display =
-      selectedRequest.status === "pending" ? "inline-block" : "none";
+      rejectBtn.style.display =
+        selectedRequest.status === "pending" ? "inline-block" : "none";
 
-    document.getElementById("generateBtn").style.display =
-      selectedRequest.status === "approved" ? "inline-block" : "none";
-  }
+      generateBtn.style.display =
+        selectedRequest.status === "approved" ? "inline-block" : "none";
 
-  function closeModal() {
-    document.getElementById("requestModal").style.display = "none";
-  }
-</script>
+      deleteBtn.style.display =
+        selectedRequest.status !== "generated" ? "inline-block" : "none";
+    }
+
+    // ===== CLOSE MODAL =====
+    function closeModal() {
+      modal.style.display = "none";
+    }
+
+    // ===== API ACTIONS =====
+    async function postAction(url) {
+      const res = await fetch(url, { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Action failed");
+    }
+
+    async function approveRequest() {
+      try {
+        await postAction(`/admin/requests/${selectedRequest._id}/approve`);
+        alert("Request approved");
+        location.reload();
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    async function rejectRequest() {
+      try {
+        await postAction(`/admin/requests/${selectedRequest._id}/reject`);
+        alert("Request rejected");
+        location.reload();
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    async function deleteRequest() {
+      if (!confirm("Delete this request permanently?")) return;
+
+      try {
+        const res = await fetch(`/admin/requests/${selectedRequest._id}`, {
+          method: "DELETE"
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Delete failed");
+
+        alert("Request deleted");
+        location.reload();
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    // ===== BUTTON EVENTS =====
+    approveBtn.addEventListener("click", approveRequest);
+    rejectBtn.addEventListener("click", rejectRequest);
+    deleteBtn.addEventListener("click", deleteRequest);
+    document.querySelector("#requestModal button:last-child")
+      .addEventListener("click", closeModal);
+
+    console.log("Requests loaded:", requests.length);
+  </script>
+
 
 </body>
 
