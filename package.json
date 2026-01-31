@@ -1,15 +1,16 @@
 {
   "name": "fruit_processing_digital_consultant",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+   "dev": "nodemon src/index.js",
+   "start": "node src/index.js"
+
   },
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "This project helps entrepreneurs plan fruit processing units by collecting business inputs, analyzing feasibility, and generating a Digital Project Report (DPR) using AI.",
   "devDependencies": {
     "nodemon": "^3.1.11"
   },
@@ -17,7 +18,16 @@
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.3",
     "ejs": "^4.0.1",
-    "express": "^5.2.1",
+    "express": "^4.22.1",
     "mongoose": "^8.21.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaurav-tendulkar/fruit_processing_digital_consultant.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/gaurav-tendulkar/fruit_processing_digital_consultant/issues"
+  },
+  "homepage": "https://github.com/gaurav-tendulkar/fruit_processing_digital_consultant#readme"
 }

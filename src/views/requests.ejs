@@ -12,7 +12,6 @@
       background: #f4f6f8;
     }
 
-    /* Top Bar */
     .topbar {
       background: #ffffff;
       height: 60px;
@@ -23,12 +22,10 @@
       border-bottom: 1px solid #ddd;
     }
 
-    /* Layout */
     .container {
       display: flex;
     }
 
-    /* Sidebar */
     .sidebar {
       width: 220px;
       background: #ffffff;
@@ -49,20 +46,17 @@
       background: #f0f0f0;
     }
 
-    /* Main */
     .main {
       flex: 1;
       padding: 30px;
     }
 
-    /* Card */
     .card {
       background: #ffffff;
       border-radius: 12px;
       padding: 20px;
     }
 
-    /* Table */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -81,7 +75,6 @@
       background: #f8f8f8;
     }
 
-    /* Status Badges */
     .status {
       padding: 6px 10px;
       border-radius: 12px;
@@ -109,7 +102,6 @@
       color: #b00020;
     }
 
-    /* Action Button */
     button {
       padding: 6px 10px;
       border: none;
@@ -128,61 +120,60 @@
 
 <body>
 
-  <!-- Top Bar -->
+  <!-- TOP BAR -->
   <div class="topbar">
-    <strong>Admin Logo</strong>
+    <strong>Admin Panel</strong>
     <span>🔔 Admin</span>
   </div>
 
   <div class="container">
 
-    <!-- Sidebar -->
+    <!-- SIDEBAR -->
     <div class="sidebar">
       <a href="/admin/dashboard">Dashboard</a>
       <a href="/admin/requests"><strong>Requests</strong></a>
-      <a href="#">Pending DPR</a>
-      <a href="#">Generated DPR</a>
-      <a href="#">Rejected</a>
       <a href="#">Reports</a>
       <a href="#">Settings</a>
     </div>
 
-    <!-- Main -->
+    <!-- MAIN -->
     <div class="main">
 
       <div class="card">
         <h2>All Requests</h2>
-<form method="GET" action="/admin/requests"
-      style="display:flex;gap:10px;align-items:center;margin-bottom:15px;">
 
-  <input type="text"
-         name="search"
-         placeholder="Search company / product"
-         value="<%= search || '' %>"
-         style="padding:6px 10px;width:220px;">
+        <!-- SEARCH FILTER -->
+        <form method="GET" action="/admin/requests"
+          style="display:flex;gap:10px;align-items:center;margin-bottom:15px;">
 
-  <select name="status" style="padding:6px 10px;">
-    <option value="">All Status</option>
-    <option value="pending" <%= status==='pending'?'selected':'' %>>Pending</option>
-    <option value="approved" <%= status==='approved'?'selected':'' %>>Approved</option>
-    <option value="rejected" <%= status==='rejected'?'selected':'' %>>Rejected</option>
-    <option value="generated" <%= status==='generated'?'selected':'' %>>Generated</option>
-  </select>
+          <input type="text" name="search" placeholder="Search company" value="<%= search || '' %>"
+            style="padding:6px 10px;width:220px;">
 
-  <button type="submit">Apply</button>
-</form>
+          <select name="status" style="padding:6px 10px;">
+            <option value="">All Status</option>
+            <option value="pending" <%=status==='pending' ?'selected':'' %>>Pending</option>
+            <option value="approved" <%=status==='approved' ?'selected':'' %>>Approved</option>
+            <option value="rejected" <%=status==='rejected' ?'selected':'' %>>Rejected</option>
+            <option value="generated" <%=status==='generated' ?'selected':'' %>>Generated</option>
+          </select>
+
+          <button type="submit">Apply</button>
+        </form>
+
+        <!-- TABLE -->
         <table>
           <thead>
             <tr>
               <th>#</th>
-              <th>Company Name</th>
-              <th>Project</th>
+              <th>Company</th>
+              <th>Product</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
+
           <tbody>
-            <% requests.forEach((req, index)=> { %>
+            <% (requests || []).forEach((req, index)=> { %>
               <tr>
                 <td>
                   <%= index + 1 %>
@@ -194,7 +185,7 @@
                   <%= req.productManufactured %>
                 </td>
                 <td>
-                  <span class="status <%= req.status %>">
+                  <span class="status <%= req.status || 'pending' %>">
                     <%= (req.status || "pending" ).toUpperCase() %>
                   </span>
                 </td>
@@ -207,206 +198,101 @@
 
         </table>
 
-        <div style="margin-top:20px;display:flex;justify-content:center;gap:6px;">
+        <!-- PAGINATION -->
+        <% if (typeof totalPages !=="undefined" ) { %>
+          <div style="margin-top:20px;display:flex;justify-content:center;gap:6px;">
 
-  <% if (currentPage > 1) { %>
-    <a href="?page=<%= currentPage - 1 %>&search=<%= search %>&status=<%= status %>">
-      <button>Prev</button>
-    </a>
-  <% } %>
+            <% if (currentPage> 1) { %>
+              <a href="?page=<%= currentPage - 1 %>">
+                <button>Prev</button>
+              </a>
+              <% } %>
 
-  <% for (let i = 1; i <= totalPages; i++) { %>
-    <a href="?page=<%= i %>&search=<%= search %>&status=<%= status %>">
-      <button style="<%= i === currentPage ? 'background:#000;' : '' %>">
-        <%= i %>
-      </button>
-    </a>
-  <% } %>
+                <% for (let i=1; i <=totalPages; i++) { %>
+                  <a href="?page=<%= i %>">
+                    <button style="<%= i === currentPage ? 'background:black;' : '' %>">
+                      <%= i %>
+                    </button>
+                  </a>
+                  <% } %>
 
-  <% if (currentPage < totalPages) { %>
-    <a href="?page=<%= currentPage + 1 %>&search=<%= search %>&status=<%= status %>">
-      <button>Next</button>
-    </a>
-  <% } %>
+                    <% if (currentPage < totalPages) { %>
+                      <a href="?page=<%= currentPage + 1 %>">
+                        <button>Next</button>
+                      </a>
+                      <% } %>
 
-</div>
+          </div>
+          <% } %>
+
       </div>
 
     </div>
-
   </div>
 
-  <!-- VIEW REQUEST MODAL -->
+  <!-- MODAL -->
   <div id="requestModal" style="
     display:none;
     position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
+    top:0;left:0;
+    width:100%;height:100%;
     background:rgba(0,0,0,0.5);
     justify-content:center;
-    align-items:center;
-  ">
+    align-items:center;">
 
-    <div style="
-      background:#fff;
-      width:70%;
-      max-height:80%;
-      overflow:auto;
-      border-radius:12px;
-      padding:20px;
-    ">
-      <h2 id="modalTitle"></h2>
+    <div style="background:white;width:70%;max-height:80%;overflow:auto;padding:20px;border-radius:12px;">
 
+      <h3 id="modalTitle"></h3>
       <div id="modalBody"></div>
 
-      <div style="margin-top:20px;display:flex;justify-content:flex-end;gap:10px;">
-        <button id="approveBtn" onclick="approveRequest()">Approve</button>
-        <button id="rejectBtn" onclick="rejectRequest()" style="background:#ef4444;">Reject</button>
-        <button id="deleteBtn" onclick="deleteRequest()" style="background:#000;">Delete</button>
-        <button id="generateBtn" onclick="generateDPR()" style="background:#10b981;display:none;"> Generate DPR
-        </button>
+      <div style="margin-top:15px;text-align:right;">
+        <button id="approveBtn">Approve</button>
+        <button id="rejectBtn" style="background:red;">Reject</button>
+        <button id="deleteBtn" style="background:black;">Delete</button>
         <button onclick="closeModal()">Close</button>
       </div>
 
     </div>
   </div>
 
-  
+  <!-- SCRIPT -->
   <script>
-    // ===== DATA =====
-    const requests = <%- JSON.stringify(requests) %>;
+
+    const requests = <% - JSON.stringify(requests || []) %>;
     let selectedRequest = null;
 
-    // ===== DOM CACHE =====
     const modal = document.getElementById("requestModal");
     const modalTitle = document.getElementById("modalTitle");
     const modalBody = document.getElementById("modalBody");
 
-    const approveBtn = document.getElementById("approveBtn");
-    const rejectBtn = document.getElementById("rejectBtn");
-    const deleteBtn = document.getElementById("deleteBtn");
-    const generateBtn = document.getElementById("generateBtn");
-
-    // ===== EVENT DELEGATION FOR VIEW BUTTON =====
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", e => {
       const btn = e.target.closest(".view-btn");
       if (!btn) return;
 
       const id = btn.dataset.id;
-      openRequestModal(id);
-    });
+      selectedRequest = requests.find(r => r._id === id);
 
-    // ===== OPEN MODAL =====
-    function openRequestModal(id) {
-      selectedRequest = requests.find(r => String(r._id) === String(id));
+      if (!selectedRequest) return;
 
-      if (!selectedRequest) {
-        alert("Request not found");
-        return;
-      }
-
-      modalTitle.textContent = selectedRequest.companyName || "";
+      modalTitle.innerText = selectedRequest.companyName;
       modalBody.innerHTML = "";
 
-      Object.entries(selectedRequest).forEach(([key, value]) => {
+      Object.entries(selectedRequest).forEach(([key, val]) => {
         if (key === "_id" || key === "__v") return;
 
-        const row = document.createElement("div");
-        row.style.display = "flex";
-        row.style.borderBottom = "1px solid #eee";
-        row.style.padding = "6px 0";
-
-        row.innerHTML = `
-        <div style="width:40%;font-weight:bold;">
-          ${key.replace(/([A-Z])/g, " $1")}
-        </div>
-        <div style="width:60%;">
-          ${value ?? "-"}
-        </div>
-      `;
-
-        modalBody.appendChild(row);
+        modalBody.innerHTML += `
+          <p><b>${key}</b> : ${val ?? "-"}</p>
+        `;
       });
 
-      toggleButtons();
       modal.style.display = "flex";
-    }
+    });
 
-    // ===== BUTTON VISIBILITY =====
-    function toggleButtons() {
-      approveBtn.style.display =
-        selectedRequest.status === "pending" ? "inline-block" : "none";
-
-      rejectBtn.style.display =
-        selectedRequest.status === "pending" ? "inline-block" : "none";
-
-      generateBtn.style.display =
-        selectedRequest.status === "approved" ? "inline-block" : "none";
-
-      deleteBtn.style.display =
-        selectedRequest.status !== "generated" ? "inline-block" : "none";
-    }
-
-    // ===== CLOSE MODAL =====
     function closeModal() {
       modal.style.display = "none";
     }
 
-    // ===== API ACTIONS =====
-    async function postAction(url) {
-      const res = await fetch(url, { method: "POST" });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Action failed");
-    }
-
-    async function approveRequest() {
-      try {
-        await postAction(`/admin/requests/${selectedRequest._id}/approve`);
-        alert("Request approved");
-        location.reload();
-      } catch (e) {
-        alert(e.message);
-      }
-    }
-
-    async function rejectRequest() {
-      try {
-        await postAction(`/admin/requests/${selectedRequest._id}/reject`);
-        alert("Request rejected");
-        location.reload();
-      } catch (e) {
-        alert(e.message);
-      }
-    }
-
-    async function deleteRequest() {
-      if (!confirm("Delete this request permanently?")) return;
-
-      try {
-        const res = await fetch(`/admin/requests/${selectedRequest._id}`, {
-          method: "DELETE"
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Delete failed");
-
-        alert("Request deleted");
-        location.reload();
-      } catch (e) {
-        alert(e.message);
-      }
-    }
-
-    // ===== BUTTON EVENTS =====
-    approveBtn.addEventListener("click", approveRequest);
-    rejectBtn.addEventListener("click", rejectRequest);
-    deleteBtn.addEventListener("click", deleteRequest);
-    document.querySelector("#requestModal button:last-child")
-      .addEventListener("click", closeModal);
-
-    console.log("Requests loaded:", requests.length);
   </script>
-
 
 </body>
 

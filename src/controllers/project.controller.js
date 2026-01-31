@@ -1,104 +1,108 @@
 import { Project } from "../models/project.model.js";
 
 
-
+// CREATE PROJECT / USER
 const createUser = async (req, res) => {
-  const body = req.body;
-  console.log(body);
-  if (!body ||
-    !body.companyName ||
-    !body.companyType ||
-    !body.address ||
-    !body.productManufactured ||
-    !body.previousProcessKnowledge ||
-    !body.marketSurveyDone ||
-    !body.projectSize ||
-    !body.croppingPatternStudy ||
-    !body.harvestingTime ||
-    !body.distanceFromRawMaterial
-  ) {
-    return res.status(400).json({ msg: "all field req..." })
+  try {
+    const body = req.body;
+
+    if (
+      !body.companyName ||
+      !body.companyType ||
+      !body.address ||
+      !body.productManufactured ||
+      !body.previousProcessKnowledge ||
+      !body.marketSurveyDone ||
+      !body.projectSize ||
+      !body.croppingPatternStudy ||
+      !body.harvestingTime ||
+      !body.distanceFromRawMaterial
+    ) {
+      return res.status(400).json({ message: "All required fields must be filled" });
+    }
+
+    await Project.create(body);
+
+    return res.status(201).json({
+      success: true,
+      message: "Project created successfully"
+    });
+
+  } catch (error) {
+    console.error("Create User Error:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Server error while creating project"
+    });
   }
+};
 
-  const result = await Project.create(
-    {
-      companyName: body.companyName,
-      companyType: body.companyType,
-      address: body.address,
-      productManufactured: body.productManufactured,
-      previousProcessKnowledge: body.previousProcessKnowledge,
-      marketSurveyDone: body.marketSurveyDone,
-      projectSize: body.projectSize,
-      croppingPatternStudy: body.croppingPatternStudy,
-      harvestingTime: body.harvestingTime,
-      distanceFromRawMaterial: body.distanceFromRawMaterial,
-      logisticsCost: body.logisticsCost,
-      maturityOfFruitOrVegetable: body.maturityOfFruitOrVegetable,
-      sizes: body.sizes,
-      costOfRawMaterial: body.costOfRawMaterial,
-      wastageInTransport: body.wastageInTransport,
-      yieldPercentage: body.yieldPercentage,
-      acceptableBlemishes: body.acceptableBlemishes,
-      testsRequired: body.testsRequired,
-      processTechnologyUsed: body.processTechnologyUsed,
-      powerRequired: body.powerRequired,
-      energyCost: body.energyCost,
-      processWaterCost: body.processWaterCost,
-      factoryBuildingType: body.factoryBuildingType,
-      costOfConstruction: body.costOfConstruction,
-      landPreparation: body.landPreparation,
-      manpowerRequirement: body.manpowerRequirement,
-      manpowerCost: body.manpowerCost,
-      expectedYieldPercentage: body.expectedYieldPercentage,
-      expectedYieldWithQuality: body.expectedYieldWithQuality,
-      wasteTreatment: body.wasteTreatment,
-      factoryCleaningFrequency: body.factoryCleaningFrequency,
-      cleaningChemicalsCost: body.cleaningChemicalsCost,
-      packagingMachineryCost: body.packagingMachineryCost,
-      packagingCostPerUnit: body.packagingCostPerUnit,
-      electrificationCost: body.electrificationCost,
-      otherChemicalsAdditivesCost: body.otherChemicalsAdditivesCost,
-      otherPeripherals: body.otherPeripherals,
-      depreciation: body.depreciation,
-      profitAndLossStatement: body.profitAndLossStatement,
-      cashFlow: body.cashFlow,
-      projectedBalanceSheetFiveYears: body.projectedBalanceSheetFiveYears,
-      status: body.status
-    }
-  );
-  console.log("RESULT : ", result);
-  return res.status(201).json({ msg: "success" })
-}
 
+
+// CHECK USERS (SIMPLE VIEW)
 const checkUser = async (req, res) => {
-  const allDbUser = await Project.find({});
-  const html = `<ul>
-    ${allDbUser.map((project) => `<li>${project.companyName} - ${project.companyType}</li>`)
-    }
-  </ul>`
-  res.send(html)
-}
+  try {
+    const allProjects = await Project.find().lean();
 
+    let html = `<h2>Projects List</h2><ul>`;
+
+    allProjects.forEach(project => {
+      html += `<li>${project.companyName} - ${project.companyType}</li>`;
+    });
+
+    html += `</ul>`;
+
+    res.send(html);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error loading projects");
+  }
+};
+
+
+
+// GET ALL USERS API
 const findUser = async (req, res) => {
   try {
-    const allDbUser = await Project.find({});
-    return res.status(200).json(allDbUser)
-  }
-  catch (error) {
+    const allProjects = await Project.find();
+
+    return res.status(200).json({
+      success: true,
+      data: allProjects
+    });
+
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({
       success: false,
       message: "Failed to fetch data"
     });
   }
+};
 
-}
 
+
+// GET USER BY ID
 const findUserId = async (req, res) => {
-  const userDb = await Project.findById(req.params.id)
-  return res.json(userDb);
-}
+  try {
+    const project = await Project.findById(req.params.id);
 
-export const getTotalRequestsCount = async (req, res) => {
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    return res.json(project);
+
+  } catch (error) {
+    return res.status(400).json({ message: "Invalid ID format" });
+  }
+};
+
+
+
+// TOTAL REQUEST COUNT
+const getTotalRequestsCount = async (req, res) => {
   try {
     const totalRequests = await Project.countDocuments();
 
@@ -106,6 +110,7 @@ export const getTotalRequestsCount = async (req, res) => {
       success: true,
       totalRequests
     });
+
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -115,8 +120,12 @@ export const getTotalRequestsCount = async (req, res) => {
   }
 };
 
-export const renderDashboard = async (req, res) => {
+
+
+// ADMIN DASHBOARD
+const renderDashboard = async (req, res) => {
   try {
+
     const total = await Project.countDocuments();
     const pending = await Project.countDocuments({ status: "pending" });
     const approved = await Project.countDocuments({ status: "approved" });
@@ -131,14 +140,10 @@ export const renderDashboard = async (req, res) => {
       .limit(3)
       .lean();
 
-        //  Recent Activity
     const activities = recentProjects.map(p => {
-      if (p.status === "generated")
-        return `✔ DPR generated for ${p.companyName}`;
-      if (p.status === "pending")
-        return `⏳ DPR pending approval for ${p.companyName}`;
-      if (p.status === "rejected")
-        return `❌ Request rejected for ${p.companyName}`;
+      if (p.status === "generated") return `✔ DPR generated for ${p.companyName}`;
+      if (p.status === "pending") return `⏳ DPR pending approval for ${p.companyName}`;
+      if (p.status === "rejected") return `❌ Request rejected for ${p.companyName}`;
       return `📄 Approved request for ${p.companyName}`;
     });
 
@@ -153,9 +158,19 @@ export const renderDashboard = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Dashboard error");
+    console.error("Dashboard Error:", error.message);
+    res.status(500).send("Dashboard loading failed");
   }
 };
 
-export { createUser, checkUser, findUser, findUserId }
+
+
+// EXPORTS
+export {
+  createUser,
+  checkUser,
+  findUser,
+  findUserId,
+  getTotalRequestsCount,
+  renderDashboard
+};
