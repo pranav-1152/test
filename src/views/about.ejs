@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Consultant</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@500;600&display=swap" rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+
+/* ================= BASE ================= */
+
+html {
+scroll-behavior: smooth;
+}
+
+body {
+background:#eef2f6;
+font-family: "Inter", sans-serif;
+font-size:17px;
+}
+
+/* ================= ABOUT BACKGROUND ================= */
+
+#about-section {
+position: relative;
+background: url("img1.jpg") center/cover no-repeat;
+background-attachment: fixed;
+}
+
+/* Dark Blur Overlay */
+#about-section::before {
+content: "";
+position: absolute;
+inset: 0;
+background: rgba(0,0,0,0.82);
+backdrop-filter: blur(7px);
+z-index: 0;
+}
+
+/* Content Above Overlay */
+#about-section > div {
+position: relative;
+z-index: 2;
+}
+
+/* ================= HEADINGS ================= */
+
+h1,h2,h3,h4 {
+font-family: "Poppins", sans-serif;
+}
+
+#about-section h2 {
+color:white;
+font-size:42px;
+font-weight:700;
+text-shadow:0 3px 8px rgba(0,0,0,0.8);
+}
+
+#about-section h3 {
+color:white;
+font-size:30px;
+margin-top:50px;
+}
+
+/* Description under title */
+.about-desc {
+max-width:900px;
+margin:15px auto 50px;
+color:#e2e2e2;
+font-size:19px;
+line-height:1.9;
+text-align:center;
+}
+
+/* ================= CONTENT BLOCK STYLE ================= */
+
+.about-card {
+background: transparent;
+padding: 25px 10px;
+border-left: 6px solid #28a745;
+margin-bottom:40px;
+}
+
+/* Heading inside block */
+.about-card b {
+color:#3cff8f;
+font-size:20px;
+font-weight:700;
+display:block;
+margin-bottom:8px;
+}
+
+/* Paragraph text */
+.about-card p {
+color:#dddddd;
+font-size:18px;
+line-height:1.8;
+}
+
+/* List items */
+.about-card li {
+color:#d6d6d6;
+font-size:18px;
+line-height:1.8;
+}
+
+/* ================= SCROLL ANIMATION ================= */
+
+.scroll-left {
+opacity:0;
+transform:translateX(-120px);
+transition:1s ease;
+}
+
+.scroll-right {
+opacity:0;
+transform:translateX(120px);
+transition:1s ease;
+}
+
+.scroll-show {
+opacity:1;
+transform:translateX(0);
+}
+
+/* ================= TITLE LINE ================= */
+
+.title-line {
+position:relative;
+display:inline-block;
+}
+
+.title-line::after {
+content:'';
+width:0;
+height:4px;
+background:#28a745;
+position:absolute;
+left:0;
+bottom:-8px;
+transition:0.4s;
+}
+
+.title-line:hover::after {
+width:100%;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR (UNCHANGED) -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<div class="container-fluid">
+
+<a class="navbar-brand d-flex align-items-center" href="#">
+Digital Consultant
+</a>
+
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+data-bs-target="#navbarSupportedContent">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+<li class="nav-item">
+<a class="nav-link active" href="index.html">Home</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link active" href="about.html">About Us</a>
+</li>
+
+<li class="nav-item dropdown">
+<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+Account
+</a>
+
+<ul class="dropdown-menu">
+<li><a class="dropdown-item" href="#">Admin</a></li>
+<li><a class="dropdown-item" href="#">User</a></li>
+</ul>
+</li>
+
+</ul>
+
+<form class="d-flex">
+<input class="form-control me-2" type="search" placeholder="Search">
+<button class="btn btn-outline-success">Search</button>
+</form>
+
+</div>
+</div>
+</nav>
+
+<!-- ================= ABOUT SECTION ================= -->
+
+<section id="about-section" style="padding:110px 20px;">
+
+<div style="max-width:1200px;margin:auto;">
+
+<h2 class="title-line" style="text-align:center;">
+About Digital Consultant Platform
+</h2>
+
+<p class="about-desc">
+A centralized digital consulting ecosystem designed to automate DPR creation,
+optimize agro business planning and enable faster decision making for farmers,
+entrepreneurs and MSMEs.
+</p>
+
+<!-- BLOCK 1 -->
+
+<div class="about-card">
+<b>How Our Digital Consultant Platform Works</b>
+<p>
+Our platform follows a structured workflow where entrepreneurs submit business details,
+market feasibility is analyzed, financial planning is performed and professional DPR
+reports are generated for execution and funding purposes.
+</p>
+</div>
+
+<h3>Business Planning Information We Collect</h3>
+
+<!-- BLOCKS ONE BY ONE -->
+
+<div class="about-card">
+<b>Company & Ownership Details</b>
+<ul>
+<li>Name of company and brand identity</li>
+<li>Business structure (Proprietor, LLP, Pvt Ltd, FPO)</li>
+<li>Factory address and location mapping</li>
+</ul>
+</div>
+
+<div class="about-card">
+<b>Manufacturing & Product Information</b>
+<ul>
+<li>Product selection and category</li>
+<li>Processing knowledge and experience</li>
+<li>Market survey results</li>
+<li>Project capacity and investment planning</li>
+</ul>
+</div>
+
+<div class="about-card">
+<b>Raw Material & Supply Chain Planning</b>
+<ul>
+<li>Cropping pattern in selected region</li>
+<li>Harvesting seasons and availability</li>
+<li>Transport distance and logistics cost</li>
+<li>Raw material procurement cost</li>
+</ul>
+</div>
+
+<div class="about-card">
+<b>Quality Control & Yield Analysis</b>
+<ul>
+<li>Fruit and vegetable maturity standards</li>
+<li>Expected production yield percentage</li>
+<li>Quality grade output planning</li>
+<li>Wastage during transport and handling</li>
+</ul>
+</div>
+
+<div class="about-card">
+<b>Infrastructure & Utility Requirements</b>
+<ul>
+<li>Power requirement and load planning</li>
+<li>Energy cost calculation</li>
+<li>Process water requirement</li>
+<li>Electrification and utility setup</li>
+</ul>
+</div>
+
+<div class="about-card">
+<b>Factory Setup & Hygiene Planning</b>
+<ul>
+<li>Owned or rented plant decision</li>
+<li>Construction and civil work cost</li>
+<li>Land preparation</li>
+<li>Cleaning frequency and hygiene chemicals</li>
+</ul>
+</div>
+
+<div class="about-card">
+<b>Processing Technology & Machinery</b>
+<ul>
+<li>Technology selection</li>
+<li>Machinery sizing and capacity</li>
+<li>Packaging machinery planning</li>
+<li>Peripheral equipment integration</li>
+</ul>
+</div>
+
+<div class="about-card">
+<b>Manpower & Operational Cost Planning</b>
+<ul>
+<li>Staff requirement calculation</li>
+<li>Labor and salary structure</li>
+<li>Packaging cost per unit</li>
+<li>Processing chemical requirements</li>
+</ul>
+</div>
+
+<div class="about-card">
+<b>Waste Management & Compliance</b>
+<ul>
+<li>Solid waste treatment planning</li>
+<li>Liquid effluent management</li>
+<li>Gaseous emission handling</li>
+<li>Testing and regulatory compliance</li>
+</ul>
+</div>
+
+<div class="about-card">
+<b>Financial Reports & Projections Generated</b>
+<ul>
+<li>Profit and loss statement</li>
+<li>Cash flow forecast</li>
+<li>Depreciation calculation</li>
+<li>5 year balance sheet projection</li>
+</ul>
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= SCROLL SCRIPT ================= -->
+
+<script>
+
+const cards = document.querySelectorAll(".about-card");
+
+cards.forEach((card, index) => {
+  if (index % 2 === 0) {
+    card.classList.add("scroll-right");
+  } else {
+    card.classList.add("scroll-left");
+  }
+});
+
+window.addEventListener("scroll", () => {
+
+  cards.forEach(card => {
+    const pos = card.getBoundingClientRect().top;
+    const screen = window.innerHeight;
+
+    if (pos < screen - 120) {
+      card.classList.add("scroll-show");
+    }
+  });
+
+});
+
+</script>
+
+</body>
+</html>

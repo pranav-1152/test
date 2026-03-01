@@ -1,7 +1,10 @@
 import { Project } from "../models/project.model.js";
 
 
+// ================================
 // CREATE PROJECT / USER
+// ================================
+
 const createUser = async (req, res) => {
   try {
     const body = req.body;
@@ -38,31 +41,25 @@ const createUser = async (req, res) => {
 };
 
 
+// ================================
+// ADMIN LOGIN CHECK (SESSION)
+// ================================
 
-// CHECK USERS (SIMPLE VIEW)
-const checkUser = async (req, res) => {
-  try {
-    const allProjects = await Project.find().lean();
+const checkUser = (req, res, next) => {
 
-    let html = `<h2>Projects List</h2><ul>`;
-
-    allProjects.forEach(project => {
-      html += `<li>${project.companyName} - ${project.companyType}</li>`;
-    });
-
-    html += `</ul>`;
-
-    res.send(html);
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error loading projects");
+  if (req.session && req.session.user) {
+    next();
+  } else {
+    res.redirect("/admin");
   }
+
 };
 
 
-
+// ================================
 // GET ALL USERS API
+// ================================
+
 const findUser = async (req, res) => {
   try {
     const allProjects = await Project.find();
@@ -82,8 +79,10 @@ const findUser = async (req, res) => {
 };
 
 
-
+// ================================
 // GET USER BY ID
+// ================================
+
 const findUserId = async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
@@ -100,8 +99,10 @@ const findUserId = async (req, res) => {
 };
 
 
-
+// ================================
 // TOTAL REQUEST COUNT
+// ================================
+
 const getTotalRequestsCount = async (req, res) => {
   try {
     const totalRequests = await Project.countDocuments();
@@ -121,8 +122,10 @@ const getTotalRequestsCount = async (req, res) => {
 };
 
 
-
+// ================================
 // ADMIN DASHBOARD
+// ================================
+
 const renderDashboard = async (req, res) => {
   try {
 
@@ -147,6 +150,7 @@ const renderDashboard = async (req, res) => {
       return `📄 Approved request for ${p.companyName}`;
     });
 
+
     res.render("dashboard", {
       stats: {
         total,
@@ -164,8 +168,10 @@ const renderDashboard = async (req, res) => {
 };
 
 
-
+// ================================
 // EXPORTS
+// ================================
+
 export {
   createUser,
   checkUser,

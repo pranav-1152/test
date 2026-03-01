@@ -1,0 +1,71 @@
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --text: #1f2937;
+}
+
+body {
+  margin: 0;
+  padding: 15px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.container {
+  background: var(--card);
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  margin-bottom: 30px;
+}
+
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+thead th {
+  background: var(--primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 12px;
+  text-align: center;
+}
+
+tbody td {
+  border-bottom: 1px solid var(--border);
+  padding: 10px;
+  font-size: 14px;
+  text-align: center;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* INPUT */
+input {
+  width: 100%;
+  padding: 7px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+/* TOTAL BOX */
+.total-box {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+  font-size: 17px;
+  font-weight: 600;
+  text-align: right;
+}

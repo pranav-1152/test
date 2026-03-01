@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="/css/.css">
+</head>
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-dark: #1e40af;
+        --bg: #f1f5f9;
+        --card: #ffffff;
+        --border: #e5e7eb;
+        --text: #1f2937;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 15px;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+    }
+
+    h1 {
+        font-size: 28px;
+        margin: 20px;
+        text-align: center;
+        color: var(--primary-dark);
+    }
+
+    h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: var(--primary);
+    }
+
+    .container {
+        background: var(--card);
+        padding: 22px;
+        border-radius: 14px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+        margin-bottom: 30px;
+    }
+
+    /* ---------- TABLE ---------- */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    thead th {
+        background: var(--primary);
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 12px;
+        text-align: center;
+    }
+
+    tbody td {
+        border-bottom: 1px solid var(--border);
+        padding: 10px;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    /* ---------- INPUTS ---------- */
+    input[type="number"],
+    input[type="text"] {
+        width: 100%;
+        padding: 7px 8px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        font-size: 13px;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    }
+
+    .readonly {
+        background: #f3f4f6;
+        border: none;
+        font-weight: 600;
+    }
+
+    /* ---------- BUTTONS ---------- */
+    .btn {
+        padding: 7px 14px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .btn-add {
+        background: #16a34a;
+        color: #ffffff;
+    }
+
+    .btn-delete {
+        background: #dc2626;
+        color: #ffffff;
+    }
+
+    /* ---------- TOTAL BOX ---------- */
+    .total-box {
+        margin-top: 18px;
+        padding: 18px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+        font-size: 17px;
+        font-weight: 600;
+        text-align: right;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+    }
+
+    .total-box strong {
+        color: var(--primary-dark);
+        font-size: 18px;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            padding: 15px;
+        }
+    }
+
+    .product-form {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        width: 180px;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        margin-bottom: 6px;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    .submit-btn {
+        align-self: flex-end;
+        height: 38px;
+        padding: 0 18px;
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+</style>
+
+<h2>MASTER DPR SHEET</h2>
+
+<table border="1" cellpadding="6" style="width:100%">
+
+    <tr style="background:#e6e6e6;font-weight:bold">
+        <th>Sr</th>
+        <th>Product</th>
+        <th>TPD</th>
+        <th>Cost/kg</th>
+        <th>Rs/Ton</th>
+        <th>RM Cost</th>
+        <th>Yield%</th>
+        <th>Output</th>
+        <th>Selling/kg</th>
+        <th>Selling/Ton</th>
+        <th>Selling</th>
+        <th>Profit</th>
+    </tr>
+
+    <!-- FRUITS -->
+    <tr style="background:yellow;font-weight:bold">
+        <td colspan="12">FRUITS</td>
+    </tr>
+
+    <% let sr=1; %>
+        <% fruits.forEach(p=> { %>
+            <tr>
+                <td>
+                    <%= sr++ %>
+                </td>
+                <td>
+                    <%= p.productName %>
+                </td>
+                <td>
+                    <%= p.rawMaterialTPD %>
+                </td>
+                <td>
+                    <%= p.costPerKg %>
+                </td>
+                <td>
+                    <%= p.rsPerTon %>
+                </td>
+                <td>
+                    <%= p.rmCostCrore %>
+                </td>
+                <td>
+                    <%= p.yieldPercent %>
+                </td>
+                <td>
+                    <%= p.finalOutputTPD %>
+                </td>
+                <td>
+                    <%= p.sellingPriceKg %>
+                </td>
+                <td>
+                    <%= p.sellingPriceTon %>
+                </td>
+                <td>
+                    <%= p.sellingCrore %>
+                </td>
+                <td>
+                    <%= p.profit %>
+                </td>
+            </tr>
+            <% }) %>
+
+                <!-- VEGETABLES -->
+                <tr style="background:yellow;font-weight:bold">
+                    <td colspan="12">VEGETABLES</td>
+                </tr>
+
+                <% vegetables.forEach(p=> { %>
+                    <tr>
+                        <td>
+                            <%= sr++ %>
+                        </td>
+                        <td>
+                            <%= p.productName %>
+                        </td>
+                        <td>
+                            <%= p.rawMaterialTPD %>
+                        </td>
+                        <td>
+                            <%= p.costPerKg %>
+                        </td>
+                        <td>
+                            <%= p.rsPerTon %>
+                        </td>
+                        <td>
+                            <%= p.rmCostCrore %>
+                        </td>
+                        <td>
+                            <%= p.yieldPercent %>
+                        </td>
+                        <td>
+                            <%= p.finalOutputTPD %>
+                        </td>
+                        <td>
+                            <%= p.sellingPriceKg %>
+                        </td>
+                        <td>
+                            <%= p.sellingPriceTon %>
+                        </td>
+                        <td>
+                            <%= p.sellingCrore %>
+                        </td>
+                        <td>
+                            <%= p.profit %>
+                        </td>
+                    </tr>
+                    <% }) %>
+
+                        <!-- ROOT CROPS -->
+                        <tr style="background:yellow;font-weight:bold">
+                            <td colspan="12">ROOT CROPS</td>
+                        </tr>
+
+                        <% rootcrops.forEach(p=> { %>
+                            <tr>
+                                <td>
+                                    <%= sr++ %>
+                                </td>
+                                <td>
+                                    <%= p.productName %>
+                                </td>
+                                <td>
+                                    <%= p.rawMaterialTPD %>
+                                </td>
+                                <td>
+                                    <%= p.costPerKg %>
+                                </td>
+                                <td>
+                                    <%= p.rsPerTon %>
+                                </td>
+                                <td>
+                                    <%= p.rmCostCrore %>
+                                </td>
+                                <td>
+                                    <%= p.yieldPercent %>
+                                </td>
+                                <td>
+                                    <%= p.finalOutputTPD %>
+                                </td>
+                                <td>
+                                    <%= p.sellingPriceKg %>
+                                </td>
+                                <td>
+                                    <%= p.sellingPriceTon %>
+                                </td>
+                                <td>
+                                    <%= p.sellingCrore %>
+                                </td>
+                                <td>
+                                    <%= p.profit %>
+                                </td>
+                            </tr>
+                            <% }) %>
+
+                                <!-- DRY FRUITS -->
+                                <tr style="background:yellow;font-weight:bold">
+                                    <td colspan="12">DRY FRUITS</td>
+                                </tr>
+
+                                <% dryfruits.forEach(p=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= sr++ %>
+                                        </td>
+                                        <td>
+                                            <%= p.productName %>
+                                        </td>
+                                        <td>
+                                            <%= p.rawMaterialTPD %>
+                                        </td>
+                                        <td>
+                                            <%= p.costPerKg %>
+                                        </td>
+                                        <td>
+                                            <%= p.rsPerTon %>
+                                        </td>
+                                        <td>
+                                            <%= p.rmCostCrore %>
+                                        </td>
+                                        <td>
+                                            <%= p.yieldPercent %>
+                                        </td>
+                                        <td>
+                                            <%= p.finalOutputTPD %>
+                                        </td>
+                                        <td>
+                                            <%= p.sellingPriceKg %>
+                                        </td>
+                                        <td>
+                                            <%= p.sellingPriceTon %>
+                                        </td>
+                                        <td>
+                                            <%= p.sellingCrore %>
+                                        </td>
+                                        <td>
+                                            <%= p.profit %>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+
+</table>
+
+<br><br>
+
+<h3>Grand Totals</h3>
+
+<table border="1" cellpadding="6" style="width:40%">
+    <tr>
+        <td>Total Tons</td>
+        <td>
+            <%= totals.totalTons %>
+        </td>
+    </tr>
+    <tr>
+        <td>Total kg</td>
+        <td>
+            <%= totals.totalKg %>
+        </td>
+    </tr>
+    <tr>
+        <td>Total kg/year</td>
+        <td>
+            <%= totals.totalKgYear %>
+        </td>
+    </tr>
+    <tr>
+        <td>Total RM Cost</td>
+        <td>
+            <%= totals.totalRM %>
+        </td>
+    </tr>
+    <tr>
+        <td>Total Selling</td>
+        <td>
+            <%= totals.totalSelling %>
+        </td>
+    </tr>
+    <tr>
+        <td>Total Profit</td>
+        <td>
+            <%= totals.totalProfit %>
+        </td>
+    </tr>
+</table>
+
+
+</body>
+
+</html>

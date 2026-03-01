@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="/css/.css">
+</head>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --text: #1f2937;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 15px;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  h1 {
+    font-size: 28px;
+    margin: 20px;
+    text-align: center;
+    color: var(--primary-dark);
+  }
+
+  h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: var(--primary);
+  }
+
+  .container {
+    background: var(--card);
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    margin-bottom: 30px;
+  }
+
+  /* ---------- TABLE ---------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  thead th {
+    background: var(--primary);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 12px;
+    text-align: center;
+  }
+
+  tbody td {
+    border-bottom: 1px solid var(--border);
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  tbody tr:hover {
+    background: #f8fafc;
+  }
+
+  /* ---------- INPUTS ---------- */
+  input[type="number"],
+  input[type="text"] {
+    width: 100%;
+    padding: 7px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  }
+
+  .readonly {
+    background: #f3f4f6;
+    border: none;
+    font-weight: 600;
+  }
+
+  /* ---------- BUTTONS ---------- */
+  .btn {
+    padding: 7px 14px;
+    border-radius: 6px;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .btn-add {
+    background: #16a34a;
+    color: #ffffff;
+  }
+
+  .btn-delete {
+    background: #dc2626;
+    color: #ffffff;
+  }
+
+  /* ---------- TOTAL BOX ---------- */
+  .total-box {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+    font-size: 17px;
+    font-weight: 600;
+    text-align: right;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+  }
+
+  .total-box strong {
+    color: var(--primary-dark);
+    font-size: 18px;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding: 15px;
+    }
+  }
+
+  .product-form {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    width: 180px;
+  }
+
+  .form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  .form-group input {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  .submit-btn {
+    align-self: flex-end;
+    height: 38px;
+    padding: 0 18px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+</style>
+
+<body>
+
+
+  <h2>
+    <%= category.toUpperCase() %> Product Entry
+  </h2>
+
+<form action="/products/add" method="POST" class="product-form">
+
+  <input type="hidden" name="category" value="<%= category %>" />
+
+  <div class="form-group">
+    <label>Product Name</label>
+    <input name="productName" required />
+  </div>
+
+  <div class="form-group">
+    <label>Raw Material TPD</label>
+    <input name="rawMaterialTPD" type="number" required />
+  </div>
+
+  <div class="form-group">
+    <label>Cost per Kg</label>
+    <input name="costPerKg" type="number" required />
+  </div>
+
+  <div class="form-group">
+    <label>Yield %</label>
+    <input name="yieldPercent" type="number" required />
+  </div>
+
+  <div class="form-group">
+    <label>Selling Price/kg</label>
+    <input name="sellingPriceKg" type="number" required />
+  </div>
+
+  <button type="submit" class="submit-btn">Save & Calculate</button>
+
+</form>
+  <hr>
+
+  <h3>Saved Products</h3>
+  <table border="1" cellspacing="0" cellpadding="6" style="width:100%;margin-top:20px">
+
+    <!-- HEADER -->
+    <tr style="background:#e6e6e6;font-weight:bold;text-align:center">
+      <th>Sr. No</th>
+      <th>Assumptions for Product Mix</th>
+      <th>Raw Material Req TPD</th>
+      <th>Raw Material Cost Rs/Kg</th>
+      <th>Raw Material Rs/Ton</th>
+      <th>Total Raw Material Cost (Cr)</th>
+      <th>Raw Material for Production</th>
+      <th>Yield %</th>
+      <th>Final Output tons/day</th>
+      <th>Selling Rs/Kg</th>
+      <th>Selling Rs/Ton</th>
+      <th>Total Selling (Cr)</th>
+      <th>SP - RM</th>
+    </tr>
+
+    <!-- CATEGORY HEADER -->
+    <tr style="background:yellow;font-weight:bold">
+      <td></td>
+      <td>
+        <%= category.toUpperCase() %>
+      </td>
+      <td colspan="11"></td>
+    </tr>
+
+    <!-- DATA ROWS -->
+    <% let sr=1; %>
+      <% products.forEach(p=> { %>
+        <tr>
+          <td>
+            <%= sr++ %>
+          </td>
+          <td>
+            <%= p.productName %>
+          </td>
+          <td>
+            <%= p.rawMaterialTPD %>
+          </td>
+          <td>
+            <%= p.costPerKg %>
+          </td>
+          <td>
+            <%= p.rsPerTon %>
+          </td>
+          <td>
+            <%= p.rmCostCrore.toFixed(3) %>
+          </td>
+          <td>
+            <%= p.rawMaterialForProduction %>
+          </td>
+          <td>
+            <%= p.yieldPercent %>
+          </td>
+          <td>
+            <%= p.finalOutputTPD %>
+          </td>
+          <td>
+            <%= p.sellingPriceKg %>
+          </td>
+          <td>
+            <%= p.sellingPriceTon %>
+          </td>
+          <td>
+            <%= p.sellingCrore.toFixed(3) %>
+          </td>
+          <td>
+            <%= p.profit.toFixed(3) %>
+          </td>
+        </tr>
+        <% }) %>
+
+  </table>
+
+  <hr>
+
+  <br><br>
+
+  <h3>Totals</h3>
+
+  <table border="1" cellspacing="0" cellpadding="8" style="width:40%">
+
+    <tr style="background:#e6e6e6;font-weight:bold">
+      <th>Item</th>
+      <th>Value</th>
+    </tr>
+
+    <tr>
+      <td>Total Tons</td>
+      <td>
+        <%= totals.totalTons.toFixed(2) %>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Total kg</td>
+      <td>
+        <%= totals.totalKg.toFixed(0) %>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Total kg/year</td>
+      <td>
+        <%= totals.totalKgYear.toFixed(0) %>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Total Raw Material Cost (Cr)</td>
+      <td>
+        <%= totals.totalRM.toFixed(3) %>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Total Selling Value (Cr)</td>
+      <td>
+        <%= totals.totalSelling.toFixed(3) %>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Total Profit</td>
+      <td>
+        <%= totals.totalProfit.toFixed(3) %>
+      </td>
+    </tr>
+
+  </table>
+
+
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+<h2>System Assumptions (Admin)</h2>
+
+<form action="/admin/settings/update" method="POST">
+
+    <label>Working Days Per Year</label>
+    <input type="number" name="workingDays" value="<%= settings.workingDays %>" required />
+
+    <br><br>
+
+    <label>Kilogram to Ton Conversion</label>
+    <input type="number" name="kgToTon" value="<%= settings.kgToTon %>" required />
+
+    <br><br>
+
+    <label>Crore Conversion Value</label>
+    <input type="number" name="croreValue" value="<%= settings.croreValue %>" required />
+
+    <br><br>
+
+    <button type="submit">Update Settings</button>
+
+</form>
